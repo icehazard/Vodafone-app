@@ -15,9 +15,24 @@ export default {
 };
 </script>
 
-<style l>
+<style>
 .curser-p {
   cursor: pointer;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.mb-70 {
+  margin-bottom: 70px;
+}
+
+.mb-40{
+  margin-bottom: 40px;
 }
 </style>
 

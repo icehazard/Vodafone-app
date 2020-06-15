@@ -1,42 +1,33 @@
 <template>
-  <div class="section-two" id="section-two-container">
+  <div class="section-two d-flex" id="section-two-container">
     <div class="card-section">
-      <div class="card-title mb-70">We create websites and campaigns that expose new opportunities</div>
-      <div class="percentage-card">
-        <div class="d-flex justify-content-between">
-          <div>PERCENTAGE 1</div>
-          <div id="percentageDisplayOne">60%</div>
+      <div class="card-title mb-70">{{ data.graphText }}</div>
+
+      <div
+        v-for="(item, idx) in data.stats"
+        :key="item.idx"
+        class="percentage-card"
+      >
+        <div v-if="data.stats" class="d-flex justify-content-between">
+          <div>{{ item.title.toUpperCase() }}</div>
+          <div :id="['item' + idx]">{{ item.amount / 10 }}%</div>
         </div>
-        <input type="range" min="0" max="100" value="60" class="slider" id="rangeOne" />
-      </div>
-      <div class="percentage-card">
-        <div class="d-flex justify-content-between">
-          <div>PERCENTAGE 2</div>
-          <div id="percentageDisplayTwo">20%</div>
-        </div>
-        <input type="range" min="0" max="100" value="20" class="slider" id="rangeTwo" />
-      </div>
-      <div class="percentage-card">
-        <div class="d-flex justify-content-between">
-          <div>PERCENTAGE 3</div>
-          <div id="percentageDisplayThree">5%</div>
-        </div>
-        <input type="range" min="0" max="100" value="5" class="slider" id="rangeThree" />
-      </div>
-      <div class="percentage-card">
-        <div class="d-flex justify-content-between">
-          <div>PERCENTAGE 4</div>
-          <div id="percentageDisplayFour">25%</div>
-        </div>
-        <input type="range" min="0" max="100" value="25" class="slider" id="rangeFour" />
+        <input
+          type="range"
+          min="0"
+          max="1000"
+          :value="item.amount"
+          class="slider"
+          :id="['range' + idx]"
+        />
       </div>
     </div>
     <div class="card-section validate">
-      <div class="card-title">Validate your info</div>
-      <div
-        class="card-subtitle"
-      >We work with ecosystem leaders, corporations and startups worldwide. How can we help you?</div>
-      <form class="center">
+      <div class="card-title">{{ data.formText }}</div>
+      <div class="card-subtitle">
+        {{ data.graphText }}
+      </div>
+      <form v-if="data.formLabels" class="center">
         <div class="form-group">
           <input
             type="tel"
@@ -45,7 +36,7 @@
             data-validation-length="10"
             class="form-control"
             id="phone"
-            placeholder="Your Phone"
+            :placeholder="data.formLabels[0]"
           />
         </div>
         <div class="form-group">
@@ -55,7 +46,7 @@
             data-validation="email"
             class="form-control"
             id="email"
-            placeholder="Your Email"
+            :placeholder="data.formLabels[1]"
           />
         </div>
         <div class="form-group error">
@@ -65,7 +56,7 @@
             data-validation-strength="1"
             class="form-control"
             id="password"
-            placeholder="Password"
+            :placeholder="data.formLabels[2]"
           />
         </div>
         <div class="center">
@@ -73,8 +64,10 @@
             type="button"
             @click="validateForm()"
             value="Validate"
-            class="btn btn-primary submit-button font-weight-lighter"
-          >Submit</button>
+            class="btn btn-primary submit-button"
+          >
+            {{ data.buttonText }}
+          </button>
         </div>
       </form>
     </div>
@@ -90,113 +83,38 @@ export default {
     return {};
   },
   methods: {
-    async getHomeData() {
-      let response = await fetch(
-        `https://voda-react-assessment.herokuapp.com/home`
-      );
-      this.data = await response.json();
-      console.log("getHomeData -> this.data ", this.data);
-    },
+    addListener(n) {
+        let s1 = document.createElement("style");
+        document.body.appendChild(s1);
+        let r1 = document.querySelector("[id=range" + n + "]");
 
-    initSliders() {
-      const s1 = document.createElement("style"),
-        s2 = document.createElement("style"),
-        s3 = document.createElement("style"),
-        s4 = document.createElement("style"),
-        r1 = document.querySelector("[id=rangeOne]"),
-        r2 = document.querySelector("[id=rangeTwo]"),
-        r3 = document.querySelector("[id=rangeThree]"),
-        r4 = document.querySelector("[id=rangeFour]");
-
-      document.body.appendChild(s1);
-      document.body.appendChild(s2);
-      document.body.appendChild(s3);
-      document.body.appendChild(s4);
-
-      r1.addEventListener(
-        "input",
-        function() {
-          document.getElementById("percentageDisplayOne").innerHTML =
-            this.value + "%";
-          var val = this.value + "% 100%";
-          s1.textContent =
-            ".js input[id=rangeOne]::-webkit-slider-runnable-track{background-size:" +
-            val +
-            "}" +
-            ".js input[id=rangeOne]::-moz-range-track{background-size:" +
-            val +
-            "}";
-          s1.textContent +=
-            '.js input[id=rangeOne] /deep/ #thumb:before{content:"' +
-            this.value +
-            '%"}';
-        },
-        false
-      );
-
-      r2.addEventListener(
-        "input",
-        function() {
-          document.getElementById("percentageDisplayTwo").innerHTML =
-            this.value + "%";
-          var val = this.value + "% 100%";
-          s2.textContent =
-            ".js input[id=rangeTwo]::-webkit-slider-runnable-track{background-size:" +
-            val +
-            "}" +
-            ".js input[id=rangeTwo]::-moz-range-track{background-size:" +
-            val +
-            "}";
-          s2.textContent +=
-            '.js input[id=rangeTwo] /deep/ #thumb:before{content:"' +
-            this.value +
-            '%"}';
-        },
-        false
-      );
-
-      r3.addEventListener(
-        "input",
-        function() {
-          document.getElementById("percentageDisplayThree").innerHTML =
-            this.value + "%";
-          var val = this.value + "% 100%";
-          s3.textContent =
-            ".js input[id=rangeThree]::-webkit-slider-runnable-track{background-size:" +
-            val +
-            "}" +
-            ".js input[id=rangeThree]::-moz-range-track{background-size:" +
-            val +
-            "}";
-          s3.textContent +=
-            '.js input[id=rangeThree] /deep/ #thumb:before{content:"' +
-            this.value +
-            '%"}';
-        },
-        false
-      );
-
-      r4.addEventListener(
-        "input",
-        function() {
-          document.getElementById("percentageDisplayFour").innerHTML =
-            this.value + "%";
-          var val = this.value + "% 100%";
-          s4.textContent =
-            ".js input[id=rangeFour]::-webkit-slider-runnable-track{background-size:" +
-            val +
-            "}" +
-            ".js input[id=rangeFour]::-moz-range-track{background-size:" +
-            val +
-            "}";
-          s4.textContent +=
-            '.js input[id=rangeFour] /deep/ #thumb:before{content:"' +
-            this.value +
-            '%"}';
-        },
-        false
-      );
-    },
+        r1.addEventListener(
+          "input",
+          function() {
+            let value = Math.round(this.value / 10) + "%";
+            document.getElementById("item" + n).innerHTML = value;
+            var val = value + "100%";
+            s1.textContent =
+              ".js input[id=range" +
+              n +
+              "]::-webkit-slider-runnable-track{background-size:" +
+              val +
+              "}" +
+              ".js input[id=range" +
+              n +
+              "]::-moz-range-track{background-size:" +
+              val +
+              "}";
+            s1.textContent +=
+              ".js input[id=range" +
+              n +
+              '] /deep/ #thumb:before{content:"' +
+              this.value +
+              '%"}';
+          },
+          false
+        );
+      },
     validateForm() {
       var errors = [];
       $.validate({
@@ -219,17 +137,24 @@ export default {
               "data-validation-length"
             ].textContent = 10;
           }
-        }
+        },
       });
-    }
+    },
+  },
+  watch: {
+    data(data) {
+      setTimeout(() => {
+        for (let x in this.data.stats) {
+        this.addListener(x);
+      }
+      }, 0);
+    },
   },
   mounted() {
     this.validateForm();
-    this.initSliders();
-  }
+  },
 };
 </script>
-
 
 <style>
 .card-subtitle {
@@ -245,7 +170,6 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-
 
 .submit-button {
   width: 160px;
@@ -286,7 +210,11 @@ export default {
   transition: opacity 2s;
 }
 
-input[id="rangeOne"]::-webkit-slider-runnable-track {
+.percentage-card {
+  height: 80px;
+}
+
+input[id="range0"]::-webkit-slider-runnable-track {
   /* only Firefox & Chrome/ Opera */
   background-image: linear-gradient(90deg, rgb(0, 139, 190), rgb(88, 254, 238));
   background-repeat: no-repeat;
@@ -294,31 +222,31 @@ input[id="rangeOne"]::-webkit-slider-runnable-track {
   height: 5px;
 }
 
-input[id="rangeTwo"]::-webkit-slider-runnable-track {
+input[id="range1"]::-webkit-slider-runnable-track {
   /* only Firefox & Chrome/ Opera */
   background-image: linear-gradient(90deg, #2e77ac, #73bff6);
   background-repeat: no-repeat;
-  background-size: 20% 100%;
+  background-size: 30% 100%;
   height: 5px;
 }
 
-input[id="rangeThree"]::-webkit-slider-runnable-track {
+input[id="range2"]::-webkit-slider-runnable-track {
   /* only Firefox & Chrome/ Opera */
   background-image: linear-gradient(90deg, #eb8459, #fabcaf);
   background-repeat: no-repeat;
-  background-size: 5% 100%;
+  background-size: 30% 100%;
   height: 5px;
 }
 
-input[id="rangeFour"]::-webkit-slider-runnable-track {
+input[id="range3"]::-webkit-slider-runnable-track {
   /* only Firefox & Chrome/ Opera */
   background-image: linear-gradient(90deg, #7d55d9, #f9aada);
   background-repeat: no-repeat;
-  background-size: 25% 100%;
+  background-size: 80% 100%;
   height: 5px;
 }
 
-input[id="rangeOne"]::-webkit-slider-thumb {
+input[id="range0"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 23px;
@@ -330,7 +258,7 @@ input[id="rangeOne"]::-webkit-slider-thumb {
   transform: translateY(-35%);
 }
 
-input[id="rangeTwo"]::-webkit-slider-thumb {
+input[id="range1"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 23px;
@@ -342,7 +270,7 @@ input[id="rangeTwo"]::-webkit-slider-thumb {
   transform: translateY(-35%);
 }
 
-input[id="rangeThree"]::-webkit-slider-thumb {
+input[id="range2"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 23px;
@@ -354,7 +282,7 @@ input[id="rangeThree"]::-webkit-slider-thumb {
   transform: translateY(-35%);
 }
 
-input[id="rangeFour"]::-webkit-slider-thumb {
+input[id="range3"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 23px;
