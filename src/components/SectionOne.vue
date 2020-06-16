@@ -1,15 +1,10 @@
 <template>
   <div>
     <div class="grid-container">
-      <div
-        v-for="(item, idx) in data"
-        :key="item.idx"
-        class="img-container"
-        :class="['item' + idx]"
-      >
+      <div v-for="(item, idx) in data" :key="item.idx" class="img-container" :class="['item' + idx]">
         <img :src="item.img" :alt="item.title" />
         <div v-if="idx == 1" class="center position-absolute">
-          <i class="fa fa-eye curser-p" aria-hidden="true"></i>
+          <i class="fa fa-eye" aria-hidden="true"></i>
           <div>{{ item.title }}</div>
           <div class="line"></div>
         </div>
@@ -41,6 +36,7 @@ export default {
   color: white;
 }
 
+
 .img-container {
   background-color: #cccccc;
   text-align: center;
@@ -51,10 +47,11 @@ export default {
   align-items: center;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   overflow: hidden;
+  border-radius: 5px;
 }
 
 .img-container > img {
-  width: 120%;
+  width: 123%;
 }
 
 .line {
@@ -87,6 +84,13 @@ export default {
 .item4 {
   grid-area: se;
 }
+
+@supports (-moz-appearance:none) {
+.grid-container {
+  height: 530px;
+  }
+}
+
 
 @media only screen and (max-width: 1230px) {
   .img-container > img {

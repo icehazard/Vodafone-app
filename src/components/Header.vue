@@ -2,34 +2,47 @@
   <div class="head">
     <div class="head-toolbar d-flex justify-content-center">
       <div class="container-toolbar">
-        <div v-for="(item, idx) in menu" :key="item.idx" class="navi-button">
+        <button v-for="(item, idx) in menu" :key="item.idx" class="navi-button">
           <div>{{ item.title }}</div>
           <div class="d-flex justify-content-center">
             <div v-if="idx == 0" class="dot-green"></div>
           </div>
-        </div>
-        <div class="ml-auto pa-20 navi-button" >
-          <i class="fa fa-search curser-p" aria-hidden="true"></i>
+        </button>
+        <div class="ml-auto pa-20 navi-button mt-2">
+          <i class="fa fa-search" aria-hidden="true"></i>
         </div>
       </div>
     </div>
-    <div v-for="(item, idx) in data" :key="item.idx">
-      <div v-if="idx == slideIndex" class="img-container">
-        <div class="position-absolute">
-          <h1 class="center mb-40">{{ item.title }}</h1>
-          <div class="mb-70">{{ item.subtitle }}</div>
-          <div class="d-flex justify-content-center">
-            <span
-              v-for="(item, idx) in data.length"
-              :key="item.idx"
-              class="dot-blue"
-              :class="{ active: idx == slideIndex }"
-              @click="slideIndex = idx"
-            />
+    <div id="carousel" class="carousel slide" data-ride="carousel">
+      <div class="carousel-inner">
+        <div v-for="(item, idx) in data" :key="item.idx" class="carousel-item" :class="{ active: idx == 0 }">
+          <div class="img-container">
+            <div class="position-absolute">
+              <h1 class="center mb-40">{{ item.title }}</h1>
+              <h5 class="mb-70">{{ item.subtitle }}</h5>
+              <div class="d-flex justify-content-center">
+                <div
+                  v-for="(item, subIndex) in data.length"
+                  :key="item.subIndex"
+                  data-target="#carousel"
+                  class="dot-blue"
+                  :class="{ active: idx == subIndex }"
+                  :data-slide-to="subIndex"
+                ></div>
+              </div>
+            </div>
+            <img class="" :src="item.image" :alt="item.title" />
           </div>
         </div>
-        <img :src="item.image" :alt="item.title" />
       </div>
+      <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
     </div>
   </div>
 </template>
@@ -38,48 +51,57 @@
 export default {
   data() {
     return {
-      slideIndex: 1,
       data: [],
       menu: [],
     };
   },
   methods: {
     async getSliderData() {
-      let response = await fetch(
-        `https://voda-react-assessment.herokuapp.com/slider`
-      );
+      let response = await fetch(`https://voda-react-assessment.herokuapp.com/slider`);
       this.data = await response.json();
     },
     async getMenuData() {
-      let response = await fetch(
-        `https://voda-react-assessment.herokuapp.com/menu`
-      );
+      let response = await fetch(`https://voda-react-assessment.herokuapp.com/menu`);
       this.menu = await response.json();
     },
   },
   mounted() {
     this.getSliderData();
     this.getMenuData();
+
+    $(".carousel").carousel({
+      wrap: false,
+      interval: 10000,
+    });
   },
 };
 </script>
 
 <style scoped lang="less">
-
 .navi-button {
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px;
+  margin-left: 20px;
+  border: none;
+  background-color: rgba(0, 139, 139, 0);
+  color: rgb(255, 255, 255);
+  font-size: 20px;
 }
 
 .head {
   background-color: #404859;
   color: #ffffff;
   height: 366px;
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
 }
 
 .head-toolbar {
   width: 100%;
   position: relative;
-  background-color: #404859;
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1;
 }
 
 .container-toolbar {
@@ -94,6 +116,7 @@ export default {
   align-items: center;
   overflow: hidden;
   height: 284px;
+  text-shadow: 2px 1px 6px rgb(94, 94, 94);
 }
 
 .dot-green {
@@ -109,13 +132,13 @@ export default {
   cursor: pointer;
   height: 12px;
   width: 12px;
-  margin: 2px;
+  margin: 5px;
   background-color: #bbbbbb00;
   border-radius: 50%;
   display: inline-block;
   border: 1px solid rgb(255, 255, 255);
   transition: background-color 0.6s ease;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  box-shadow: 2px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 .active,
@@ -135,7 +158,7 @@ img {
   }
 }
 
-@media only screen and (max-width: 395px) {
+@media only screen and (max-width: 375px) {
   img {
     height: 100%;
     width: auto;

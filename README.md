@@ -1,5 +1,10 @@
 # vodafone-app
 
+## Live Preview
+
+[Link](https://gateway.pinata.cloud/ipfs/QmYKFqSyAwWsH5wXhNVke1pkawCzy1DZeRNJBnACnxx9jy/)
+
+
 ## Project setup
 ```
 npm install

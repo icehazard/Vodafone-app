@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Home from "./components/Home.vue";
+import Home from "./Views/Home.vue"
 
 export default {
   name: "App",
@@ -16,10 +16,6 @@ export default {
 </script>
 
 <style>
-.curser-p {
-  cursor: pointer;
-}
-
 .center {
   display: flex;
   flex-direction: column;

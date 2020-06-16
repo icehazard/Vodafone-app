@@ -5,20 +5,17 @@
       <div class="body-container">
         <div class="banner">
           <div class="banner-top">
-            <h1 class="section-text">{{ data.description }}</h1>
+            <h1 class="section-text ">{{ home.description }}</h1>
           </div>
           <div class="section_container">
-            <div class="section-controller" @click="sectionIndex = 0">
+            <button class="section-controller" @click="sectionIndex = 0">
               <span>Section 1</span>
               <span v-show="sectionIndex == 0" class="dot"></span>
-            </div>
-            <div class="section-controller" @click="sectionIndex = 1">
+            </button>
+            <button class="section-controller" @click="sectionIndex = 1">
               <span>Section 2</span>
               <span v-show="sectionIndex == 1" class="dot"></span>
-            </div>
-          </div>
-          <div class="our-services">
-            <span v-show="sectionIndex == 1">{{ sectionTwo.title }}</span>
+            </button>
           </div>
         </div>
         <SectionOne v-if="sectionIndex == 0" :data="data" />
@@ -29,9 +26,9 @@
 </template>
 
 <script>
-import Header from "./Header";
-import SectionOne from "./SectionOne";
-import SectionTwo from "./SectionTwo";
+import Header from "../components/Header";
+import SectionOne from "../components/SectionOne";
+import SectionTwo from "../components/SectionTwo";
 
 export default {
   name: "Home",
@@ -42,19 +39,19 @@ export default {
   },
   data() {
     return {
-      sectionIndex: 1,
+      sectionIndex: 0,
       data: [],
       sectionTwo: [],
+      home: [],
     };
   },
   methods: {
     async getHomeData() {
-      let response = await fetch(
-        `https://voda-react-assessment.herokuapp.com/home`
-      );
+      let response = await fetch(`https://voda-react-assessment.herokuapp.com/home`);
       let data = await response.json();
       this.data = data[0].sections[0].images;
       this.sectionTwo = data[0].sections[1];
+      this.home = data[0];
     },
   },
   mounted() {
@@ -66,12 +63,13 @@ export default {
 <style lang="less">
 @font-face {
   font-family: "MyriadPro";
-  src: url("/fonts/MyriadPro-Regular.otf");
+  src: url("https://res.cloudinary.com/dorhsrqla/raw/upload/v1592299894/MyriadPro-Regular_hvv9ja.otf");
 }
 
 .section_container {
   display: flex;
   justify-content: flex-end;
+  margin-top: 25px;
 }
 
 .banner {
@@ -80,15 +78,6 @@ export default {
 
 .section-text {
   margin: 0;
-  transform: translatey(50%);
-}
-
-.our-services {
-  display: flex;
-  align-items: flex-end;
-  color: #1292ee;
-  height: 80px;
-  padding-bottom: 22px;
 }
 
 .dot {
@@ -106,7 +95,8 @@ export default {
   align-items: center;
   padding: 14px;
   margin-left: 20px;
-  cursor: pointer;
+  border: none;
+  background-color: rgba(0, 139, 139, 0);
 }
 
 .banner-top {
@@ -124,6 +114,10 @@ export default {
   width: 1170px;
 }
 
+body {
+  font-family: "MyriadPro";
+}
+
 @media only screen and (max-width: 1230px) {
   .body-container {
     width: 600px;
@@ -136,9 +130,21 @@ export default {
   #section-two-container {
     flex-direction: column;
   }
+
+  .banner {
+    height: auto;
+  }
+
+  .our-services {
+    margin-left: 6px;
+  }
 }
 
 @media only screen and (max-width: 620px) {
+  .our-services {
+    margin-left: 0px;
+  }
+
   .body-container {
     width: 100%;
     height: auto;
@@ -154,7 +160,6 @@ export default {
   }
 
   .card-title {
-    height: auto;
     font-size: 24px;
   }
 }
